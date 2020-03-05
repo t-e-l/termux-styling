@@ -6,7 +6,7 @@ env:
   - ANDROID_API=28
   - ANDROID_BUILD_API=28.0.3
   - REPO=tui-expert/termux-styling
-  - APK_NAME=T-UI_2[Styling]
+  - APK_NAME="TEL:Styling"
   - APK_OUTPUT=./app/build/outputs/apk/release/app-release-unsigned.apk
 android:
   components:
