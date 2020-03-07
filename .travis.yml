@@ -31,7 +31,6 @@ cache:
   - "$HOME/.android/build-cache"
 script:
 - "./gradlew :app:assembleRelease"
-
 before_install:
 - mkdir -p $ANDROID_HOME/licenses
 - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
@@ -41,20 +40,19 @@ before_install:
 - echo y | sdkmanager "platforms;android-${ANDROID_API}"
 - echo y | sdkmanager "ndk-bundle"
 - echo y | sdkmanager "ndk;21.0.6113669"
-
 before_deploy:
 - find . -name '*.apk'
 - mv ${APK_OUTPUT} app-release.apk
-- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore keystore.jks -storepass $keystore_password -keypass $keystore_alias_password app-release.apk $keystore_alias
+- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore keystore.jks -storepass
+  $keystore_password -keypass $keystore_alias_password app-release.apk $keystore_alias
 - jarsigner -verify app-release.apk
 - "${ANDROID_HOME}build-tools/${ANDROID_BUILD_API}/zipalign -v 4 app-release.apk ${APK_NAME}.apk"
 - find . -name '*.apk'
 deploy:
   provider: releases
-  token:
-    secure: $github_oauth
+  api_key:
+    secure: D85TnHJXAbtx4UYRUakIA57eflM+GGKa94mLm6pSjbgUbsG02dDgoUJBrLcToSbxEzKOOWh5rVpE07VH9AyrQpPYXVL/qtNNa//27VdbxT71OeDXv5sy4LKob4nQSCAgegYf2cYuL9yjdSFz54obLWhOav1uOjsb1yT7unwb4GKscG+47US/ySBicJdfBHLNXX3bW+fOOmgSu3FCKfwyGWOUKqB2gPbCYuVTQzq7WOQIvYgLXGsX1dtbDAx4Ux7H3l7UlK6Ppn+kDyFzG3cUc+5Uw/oAETtyMGu4lZ3QAylerGQ8HCJpVaUs2dezqEwBn8dc4mRvygG3WC4BPAQZcAA+WKE51Sq9H1ELmMXm2/jK6+eW3qdyJGdNIbTcseufxHHMtUu1jWeyiffDTdyrWCAWBlCde+ps2DOQ3U+RlNAU8HLRuFRWDI91wOf7U0jcpfcKA1aSDVGQ42p1qg9uz/BvUJ9VlRT5AvpquJE79aW+/infZGwziL3fXTwC/h/rMuECWQKByvPsZGyklmOg5kC8OnYQeytbS7vEgJfyDG1JQ+7KQbAEmM4O9iqBz6zHFXUTA361+P08M4rwGaMvOWNc68B/1CHzMSPfjQ/uhdkrsdSkIUbf3aY2+LafHT2W9KIsVkVeLAWCbv4Y4oFn5aNLcFTyAeM9DWtAAfaaXb0=
   file: ${APK_NAME}.apk
   skip_cleanup: true
   on:
     repo: ${REPO}
-
